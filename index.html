@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ren Li | SUSTech | Assistant Professor</title>
+    <style>
+        /* ==============================
+           全局样式 & 配色微调
+           ============================== */
+        :root {
+            /* 提取自第二张图的青绿色 */
+            --brand-color: #1D9A8D; 
+            --link-underline: #8EC2BB; /* 较浅的青绿色用于下划线，模仿虚线效果 */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6; color: #222; max-width: 1050px; margin: 0 auto; padding: 60px 25px; background-color: #fff;
+        }
+
+        /* 统一的青绿色链接样式，带虚线下划线 */
+        a { 
+            color: var(--brand-color); 
+            text-decoration: none; 
+            transition: 0.2s; 
+            border-bottom: 1.5px dotted #ddd; /* 模仿图2中的细虚线 */
+            padding-bottom: 1px;
+        }
+        
+        a:hover { 
+            opacity: 0.8; 
+            border-bottom-color: var(--link-underline); /* 悬停时下划线变亮 */
+        }
+
+        /* Profile Layout (布局保持不变) */
+        .header { display: flex; flex-wrap: wrap; gap: 50px; margin-bottom: 70px; align-items: center; }
+        .intro { flex: 2; min-width: 350px; }
+        .photo { flex: 0.8; min-width: 220px; }
+        .photo img { width: 100%; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        h1 { font-size: 2.8rem; margin: 0 0 10px 0; font-weight: 800; letter-spacing: -0.5px; }
+        .title-sub { font-size: 1.2rem; color: #555; margin-bottom: 25px; line-height: 1.4; }
+        .bio-text { font-size: 1.05rem; margin-bottom: 25px; text-align: justify; }
+
+        /* Links area styling (CV/Email 等) */
+        .links { display: flex; gap: 18px; font-weight: 600; font-size: 1.0rem; }
+        /* 图1中的下划线偏粗，这里强化一下链接的虚线感 */
+        .links a { border-bottom: 1.5px solid var(--brand-color); padding-bottom: 2px; }
+        .links a:hover { border-bottom-style: dotted; } /* 悬停变虚线 */
+
+        /* Sections */
+        h2 { font-size: 1.6rem; margin: 60px 0 30px 0; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .news-item { margin-bottom: 12px; font-size: 0.95rem; }
+        .news-date { font-weight: bold; color: #666; margin-right: 10px; min-width: 80px; display: inline-block; }
+
+        /* Publications - Silvia Style (配色已调整) */
+        .pub-row { display: flex; gap: 30px; margin-bottom: 45px; }
+        .pub-thumb { width: 270px; height: 130px; flex-shrink: 0; border: 1px solid #f0f0f0; overflow: hidden; background: #fafafa;}
+        .pub-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .pub-thumb img:hover { transform: scale(1.05); }
+        
+        .pub-info { flex: 1; }
+        .pub-title { font-weight: 700; font-size: 1.1rem; color: #111; display: block; margin-bottom: 5px; line-height: 1.3; border-bottom: none;} /* 论文标题不加下划线 */
+        
+        .pub-authors { font-size: 0.95rem; color: #444; margin-bottom: 5px; }
+        /* 强调自己：改为青绿色 */
+        .me { color: var(--brand-color); font-weight: bold; } 
+
+        .pub-venue { font-size: 0.95rem; font-weight: 600; color: var(--brand-color); margin-bottom: 10px; } /* 会议名颜色也调整 */
+        
+        /* Publication 按钮样式微调 */
+        .pub-links { font-size: 0.85rem; display: flex; gap: 10px; }
+        .pub-links a { 
+            color: #666; 
+            border: 1px solid #ccc; 
+            padding: 3px 12px; 
+            border-radius: 20px; 
+            border-bottom: 1px solid #ccc; /* 按钮样式，不加虚线 */
+        }
+        .pub-links a:hover { border-color: var(--brand-color); color: var(--brand-color); background: #fdfdfd;}
+
+        .opening-box { background: #f8fcfb; padding: 25px; border-left: 5px solid var(--brand-color); margin: 40px 0; border-radius: 4px;}
+        .opening-box h3 { color: var(--brand-color); margin-top: 0; }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column-reverse; text-align: center; }
+            .pub-row { flex-direction: column; }
+            .pub-thumb { width: 100%; height: auto; }
+            .links { justify-content: center; }
+        }
+    </style>
+
+    <nav style="
+        display: flex; 
+        gap: 30px; 
+        margin-bottom: 50px; 
+        padding: 20px 0; 
+        border-bottom: 1px solid #eee; 
+        font-weight: 600;
+        font-size: 1.1rem;
+    ">
+        <a href="index.html" class="active">Home</a>
+        <a href="pub.html" class="nav-link pub-link">Publications</a>
+        <a href="#" class="nav-link lab-link">Laboratory</a>
+    </nav>
+
+    <style>
+        .nav-link { 
+            text-decoration: none; 
+            color: #666; 
+            border-bottom: 2px solid transparent;
+            padding-bottom: 5px;
+            transition: 0.2s;
+        }
+        .nav-link:hover { color: var(--brand-color); }
+        
+        /* 激活状态的样式：青绿色下划线 */
+        .active { 
+            color: var(--brand-color) !important; 
+            border-bottom: 2px solid var(--brand-color) !important; 
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+    <section class="header">
+        <div class="intro">
+            <h1>Ren Li</h1>
+            <p class="title-sub">
+                Incoming Tenure-track Assistant Professor (Starting July 2026)<br>
+                <strong>Southern University of Science and Technology (SUSTech)</strong>
+            </p>
+            <div class="bio-text">
+                I am a Postdoc in <a href="https://mbzuai.ac.ae/"> MBZUAI</a>, working with <a href="https://mbzuai.ac.ae/study/faculty/dr-hao-li/">Prof. Hao Li</a>. I received my Ph.D. from <a href="https://www.epfl.ch/en/">École Polytechnique Fédérale de Lausanne (EPFL)</a>, advised by <a href="https://people.epfl.ch/pascal.fua?lang=en">Prof. Pascal Fua</a>.
+                Prior to that, I obtained my M.S. from Purdue University in 2019, and my B.S. from University of Science and Technology of China (USTC) in 2016. 
+                <br><br>
+                My research focuses on 3D vision and digitization, with particular emphasis on 3D object representation and reconstruction, geometric computing, and physics-based simulation. I am interested in integrating geometric modeling, optimization and data-driven approaches to develop efficient and interpretable methods for understanding, modeling and generating complex 3D objects and scenes.
+            </div>
+            <div class="links">
+                <a href="figs/Ren_Resume.pdf">CV</a>
+                <a href="https://scholar.google.com/citations?user=dZU-_FgAAAAJ&hl=en&oi=ao">Google Scholar</a>
+                <a href="mailto:ren.li@mbzuai.ac.ae">Email</a>
+            </div>
+        </div>
+        <div class="photo">
+            <img src="figs/photo.jpg" alt="Ren Li"> 
+        </div>
+    </section>
+
+    <div class="opening-box">
+        <h3>📢 Openings / 招生信息</h3>
+        <p>I am actively recruiting <b>Research Assistants</b>, <b>Master's</b> and <b>PhD students</b> with strong backgrounds in mathematics or physics, as well as solid programming skills. Visiting students are also welcome. If you are interested, please feel free to contact me with your CV and a brief research statement.</p>
+    </div>
+
+    <section>
+        <h2>News</h2>
+        <div class="news-item"><span class="news-date">May. 2025</span> <b>[SIGGRAPH, 2025]</b> - Single View Garment Reconstruction Using Diffusion Mapping Via Pattern Coordinates.</div>
+        <div class="news-item"><span class="news-date">Sept. 2024</span> <b>[NeurIPS, 2024]</b> - Reconstruction of Manipulated Garment with Guided Deformation Prior.</div>
+        <div class="news-item"><span class="news-date">Feb. 2024</span> <b>[CVPR, 2024]</b> - Garment Recovery with Shape and Deformation Priors.</div>
+        <div class="news-item"><span class="news-date">Sept. 2023</span> <b>[NeurIPS, 2023]</b> - ISP: Multi-Layered Garment Draping with Implicit Sewing Patterns.</div>
+        <div class="news-item"><span class="news-date">Feb. 2023</span> <b>[CVPR, 2023]</b> - DrapeNet: Garment Generation and Self-Supervised Draping.</div>
+    </section>
+
+    <section>
+        <h2>Selected Publications</h2>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/disp.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Single View Garment Reconstruction Using Diffusion Mapping Via Pattern Coordinates</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Cong Cao, Corentin Dumery, Yingxuan You, Hao Li, Pascal Fua
+                </div>
+                <div class="pub-venue">SIGGRAPH 2025</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2504.08353">Paper</a> <a href="https://github.com/liren2515/DMap">Code</a> <a href="https://liren2515.github.io/page/dmap/dmap.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/diffusion2.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Reconstruction of Manipulated Garment with Guided Deformation Prior</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Corentin Dumery, Zhantao Deng, Pascal Fua
+                </div>
+                <div class="pub-venue">NeurIPS 2024</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2405.10934">Paper</a> <a href="https://liren2515.github.io/page/folding/folding.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/prior.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Garment Recovery with Shape and Deformation Priors</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Corentin Dumery, Benoît Guillard, Pascal Fua
+                </div>
+                <div class="pub-venue">CVPR 2024</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2311.10356">Paper</a> <a href="https://github.com/liren2515/GarmentRecovery">Code</a> <a href="https://liren2515.github.io/page/prior/prior.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/isp3.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">ISP: Multi-Layered Garment Draping with Implicit Sewing Patterns</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Benoît Guillard, Pascal Fua
+                </div>
+                <div class="pub-venue">NeurIPS 2023</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2305.14100">Paper</a> <a href="https://github.com/liren2515/ISP">Code</a> <a href="https://liren2515.github.io/page/isp/isp.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/drapenet.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">DrapeNet: Garment Generation and Self-Supervised Draping</span>
+                <div class="pub-authors">
+                    Luca De Luigi*, <span class="me">Ren Li*</span>, Benoît Guillard, Mathieu Salzmann, Pascal Fua (* Equal Contribution)
+                </div>
+                <div class="pub-venue">CVPR 2023</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2211.11277">Paper</a> <a href="https://github.com/liren2515/DrapeNet">Code</a> <a href="https://liren2515.github.io/page/drapenet/drapenet.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/hkmr.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Hierarchical Kinematic Human Mesh Recovery</span>
+                <div class="pub-authors">
+                    Georgios Georgakis*, <span class="me">Ren Li*</span>, Srikrishna Karanam, Terrence Chen, Jana Kosecka, Ziyan Wu (* Equal Contribution)
+                </div>
+                <div class="pub-venue">ECCV 2020</div>
+                <div class="pub-links">
+                    <a href="https://128.84.21.199/abs/2003.04232">Paper</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="margin-top: 100px; padding-bottom: 50px; font-size: 0.8rem; color: #999; text-align: center;">
+        &copy; Ren Li, 2026. 
+    </footer>
+
+</body>
+</html>

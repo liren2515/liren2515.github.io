@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications | Ren Li | SUSTech</title>
+    <style>
+        /* ==============================
+           全局样式 & 配色微调
+           ============================== */
+        :root {
+            /* 提取自第二张图的青绿色 */
+            --brand-color: #1D9A8D; 
+            --link-underline: #8EC2BB; /* 较浅的青绿色用于下划线，模仿虚线效果 */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6; color: #222; max-width: 1050px; margin: 0 auto; padding: 60px 25px; background-color: #fff;
+        }
+
+        /* 统一的青绿色链接样式，带虚线下划线 */
+        a { 
+            color: var(--brand-color); 
+            text-decoration: none; 
+            transition: 0.2s; 
+            border-bottom: 1.5px dotted #ddd; /* 模仿图2中的细虚线 */
+            padding-bottom: 1px;
+        }
+        
+        a:hover { 
+            opacity: 0.8; 
+            border-bottom-color: var(--link-underline); /* 悬停时下划线变亮 */
+        }
+
+        /* Profile Layout (布局保持不变) */
+        .header { display: flex; flex-wrap: wrap; gap: 50px; margin-bottom: 70px; align-items: center; }
+        .intro { flex: 2; min-width: 350px; }
+        .photo { flex: 0.8; min-width: 220px; }
+        .photo img { width: 100%; border-radius: 2px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        h1 { font-size: 2.3rem; margin: 0 0 10px 0; font-weight: 800; letter-spacing: -0.5px; }
+        .title-sub { font-size: 1.2rem; color: #555; margin-bottom: 25px; line-height: 1.4; }
+        .bio-text { font-size: 1.05rem; margin-bottom: 25px; text-align: justify; }
+
+        /* Links area styling (CV/Email 等) */
+        .links { display: flex; gap: 18px; font-weight: 600; font-size: 1.0rem; }
+        /* 图1中的下划线偏粗，这里强化一下链接的虚线感 */
+        .links a { border-bottom: 1.5px solid var(--brand-color); padding-bottom: 2px; }
+        .links a:hover { border-bottom-style: dotted; } /* 悬停变虚线 */
+
+        /* Sections */
+        h2 { font-size: 1.6rem; margin: 60px 0 30px 0; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* 年份标签样式 */
+        .year-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #999;
+            margin: 50px 0 20px 0;
+            display: flex;
+            align-items: center;
+        }
+        .year-header::after {
+            content: "";
+            flex: 1;
+            margin-left: 20px;
+            height: 1px;
+            background: #eee;
+        }
+        
+        .news-item { margin-bottom: 12px; font-size: 0.95rem; }
+        .news-date { font-weight: bold; color: #666; margin-right: 10px; min-width: 80px; display: inline-block; }
+
+        /* Publications - Silvia Style (配色已调整) */
+        .pub-row { display: flex; gap: 30px; margin-bottom: 45px; }
+        .pub-thumb { width: 270px; height: 130px; flex-shrink: 0; border: 1px solid #f0f0f0; overflow: hidden; background: #fafafa;}
+        .pub-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .pub-thumb img:hover { transform: scale(1.05); }
+
+        .pub-thumb video {
+            width: 100%;          /* 宽度撑满容器 */
+            height: 100%;         /* 高度撑满容器 */
+            object-fit: contain;    /* 核心属性：类似背景图，自动剪裁多余部分以填满方框 */
+            display: block;
+            mix-blend-mode: normal; 
+        }
+
+        /* 当视频开始播放时（通过 JS 添加 playing 类），再激活黑科技 */
+        .pub-thumb video.playing {
+            mix-blend-mode: multiply; /* 或者 plus-lighter，取决于哪种能消黑线 */
+        }
+        
+
+        
+        .pub-info { flex: 1; }
+        .pub-title { font-weight: 700; font-size: 1.1rem; color: #111; display: block; margin-bottom: 5px; line-height: 1.3; border-bottom: none;} /* 论文标题不加下划线 */
+        
+        .pub-authors { font-size: 0.95rem; color: #444; margin-bottom: 5px; }
+        /* 强调自己：改为青绿色 */
+        .me { color: var(--brand-color); font-weight: bold; } 
+
+        .pub-venue { font-size: 0.95rem; font-weight: 600; color: var(--brand-color); margin-bottom: 10px; } /* 会议名颜色也调整 */
+        
+        /* Publication 按钮样式微调 */
+        .pub-links { font-size: 0.85rem; display: flex; gap: 10px; }
+        .pub-links a { 
+            color: #666; 
+            border: 1px solid #ccc; 
+            padding: 3px 12px; 
+            border-radius: 20px; 
+            border-bottom: 1px solid #ccc; /* 按钮样式，不加虚线 */
+        }
+        .pub-links a:hover { border-color: var(--brand-color); color: var(--brand-color); background: #fdfdfd;}
+
+        .opening-box { background: #f8fcfb; padding: 25px; border-left: 5px solid var(--brand-color); margin: 40px 0; border-radius: 4px;}
+        .opening-box h3 { color: var(--brand-color); margin-top: 0; }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column-reverse; text-align: center; }
+            .pub-row { flex-direction: column; }
+            .pub-thumb { width: 100%; height: auto; }
+            .links { justify-content: center; }
+        }
+    </style>
+
+
+    <nav style="
+        display: flex; 
+        gap: 30px; 
+        margin-bottom: 50px; 
+        padding: 20px 0; 
+        border-bottom: 1px solid #eee; 
+        font-weight: 600;
+        font-size: 1.1rem;
+    ">
+        <a href="index.html" class="nav-link home-link">Home</a>
+        <a href="pub.html" class="active">Publications</a>
+        <a href="#" class="nav-link lab-link">Laboratory</a>
+    </nav>
+
+    <style>
+        .nav-link { 
+            text-decoration: none; 
+            color: #666; 
+            border-bottom: 2px solid transparent;
+            padding-bottom: 5px;
+            transition: 0.2s;
+        }
+        .nav-link:hover { color: var(--brand-color); }
+        
+        /* 激活状态的样式：青绿色下划线 */
+        .active { 
+            color: var(--brand-color) !important; 
+            border-bottom: 2px solid var(--brand-color) !important; 
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+
+    <div style="text-align: center; margin-bottom: 50px;">
+        <h1 style="margin-bottom: 10px;">Full Publications</h1>
+        <p style="font-size: 0.85rem; color: #999; letter-spacing: 0.5px;">
+            <span style="padding: 0 10px;">* Equal Contribution</span>
+            <span style="color: #ddd;">|</span>
+            <span style="padding: 0 10px;">&dagger; Corresponding Author</span>
+        </p>
+    </div>
+
+
+    <div class="year-header">2026</div>
+    <div class="pub-row">
+        <div class="pub-thumb"><img src="figs/sigg26.png" alt=""></div>
+        <div class="pub-info">
+            <span class="pub-title">Learning Sewing Patterns via Latent Flow Matching of Implicit Fields</span>
+            <div class="pub-authors">Cong Cao*, <span class="me">Ren Li*†</span>, Corentin Dumery, Hao Li (* Equal Contribution, † Corresponding Author)</div> 
+            <div class="pub-venue">SIGGRAPH, 2026 (Conditional Acceptance)</div>
+            <div class="pub-links"><a href="https://arxiv.org/abs/2601.17740">arXiv</a> </div>
+        </div>
+    </div>
+
+    <div class="pub-row">
+        <div class="pub-thumb"><img src="figs/luiviton.png" alt=""></div>
+        <div class="pub-info">
+            <span class="pub-title">LUIVITON: Learned Universal Interoperable VIrtual Try-ON</span>
+            <div class="pub-authors">Cong Cao, Xianhang Cheng, Jingyuan Liu, Yujian Zheng, Zhenhui Lin, <span class="me">Ren Li</span>, Meriem Chkir, Hao Li</div>
+            <div class="pub-venue">ACM Transactions on Graphics (TOG), 2026 (Conditional Acceptance)</div>
+            <div class="pub-links"><a href="https://arxiv.org/abs/2509.05030">Paper</a> <a href="#">Code</a> <a href="#">Project</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="pub-row">
+        <div class="pub-thumb"><img src="figs/st.png" alt=""></div>
+        <div class="pub-info">
+            <span class="pub-title">Spatio-Temporal Garment Reconstruction Using Diffusion Mapping via Pattern Coordinates</span>
+            <div class="pub-authors">Yingxuan You*, <span class="me">Ren Li*†</span>, Corentin Dumery, Cong Cao, Hao Li, Pascal Fua (* Equal Contribution, † Corresponding Author)</div>
+            <div class="pub-venue"> Preprint, 2026</div>
+            <div class="pub-links"><a href="https://arxiv.org/abs/2602.24043">arXiv</a> </div>
+        </div>
+    </div>
+
+    <div class="year-header">2025</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/disp.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Single View Garment Reconstruction Using Diffusion Mapping Via Pattern Coordinates</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Cong Cao, Corentin Dumery, Yingxuan You, Hao Li, Pascal Fua
+                </div>
+                <div class="pub-venue">SIGGRAPH 2025</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2504.08353">Paper</a> <a href="https://github.com/liren2515/DMap">Code</a> <a href="https://liren2515.github.io/page/dmap/dmap.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <video 
+                    src="figs/stacks.mp4" 
+                    loop 
+                    muted 
+                    playsinline>
+                </video>
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Counting Stacked Objects</span>
+                <div class="pub-authors">Corentin Dumery, Noa Etté, Axiang Fan, <span class="me">Ren Li</span>, Jingyi Xu, Hieu Le, Pascal Fua</div>
+                <div class="pub-venue">ICCV 2025 (Oral)</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2411.19149">Paper</a> <a href="https://github.com/CorentinDumery/3d-counting">Code</a> <a href="https://corentindumery.github.io/projects/stacks.html">Project</a></div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <video 
+                    src="figs/disconerf.mp4" 
+                    loop 
+                    muted 
+                    playsinline
+                ></video>
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Enforcing View-Consistency in Class-Agnostic 3D Segmentation Fields</span>
+                <div class="pub-authors">Corentin Dumery, Axiang Fan, <span class="me">Ren Li</span>, Nicolas Talabot, Pascal Fua</div>
+                <div class="pub-venue">CVPR Workshop, 2025</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2408.09928">Paper</a> <a href="https://corentindumery.github.io/projects/disconerf.html">Project</a></div>
+            </div>
+        </div>
+
+    <div class="year-header">2024</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <video 
+                    src="figs/manipulated.mp4" 
+                    poster="figs/manipulated.png"
+                    loop 
+                    muted 
+                    playsinline
+                ></video>
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Reconstruction of Manipulated Garment with Guided Deformation Prior</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Corentin Dumery, Zhantao Deng, Pascal Fua
+                </div>
+                <div class="pub-venue">NeurIPS 2024</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2405.10934">Paper</a> <a href="https://liren2515.github.io/page/folding/folding.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/prior.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Garment Recovery with Shape and Deformation Priors</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Corentin Dumery, Benoît Guillard, Pascal Fua
+                </div>
+                <div class="pub-venue">CVPR 2024</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2311.10356">Paper</a> <a href="https://github.com/liren2515/GarmentRecovery">Code</a> <a href="https://liren2515.github.io/page/prior/prior.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+    <div class="year-header">2023</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/isp3.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">ISP: Multi-Layered Garment Draping with Implicit Sewing Patterns</span>
+                <div class="pub-authors">
+                    <span class="me">Ren Li</span>, Benoît Guillard, Pascal Fua
+                </div>
+                <div class="pub-venue">NeurIPS 2023</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2305.14100">Paper</a> <a href="https://github.com/liren2515/ISP">Code</a> <a href="https://liren2515.github.io/page/isp/isp.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/drapenet.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">DrapeNet: Garment Generation and Self-Supervised Draping</span>
+                <div class="pub-authors">
+                    Luca De Luigi*, <span class="me">Ren Li*</span>, Benoît Guillard, Mathieu Salzmann, Pascal Fua (* Equal Contribution)
+                </div>
+                <div class="pub-venue">CVPR 2023</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2211.11277">Paper</a> <a href="https://github.com/liren2515/DrapeNet">Code</a> <a href="https://liren2515.github.io/page/drapenet/drapenet.html">Project</a>
+                </div>
+            </div>
+        </div>
+
+    <div class="year-header">2022</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/dig-new.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">DIG: Draping Implicit Garment over the Human Body</span>
+                <div class="pub-authors"><span class="me">Ren Li</span>, Benoît Guillard, Edoardo Remelli, Pascal Fua</div>
+                <div class="pub-venue">ACCV 2022 (Oral)</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2209.10845">Paper</a> <a href="https://github.com/liren2515/DIG">Code</a> <a href="https://liren2515.github.io/page/dig/dig.html">Project</a></div>
+            </div>
+        </div>
+
+    <div class="year-header">2021</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/eeg.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">The Perils and Pitfalls of Block Design for EEG Classification Experiments</span>
+                <div class="pub-authors"><span class="me">Ren Li</span>, Jared S. Johansen, Hamad Ahmed, Thomas V. Ilyevsky, Ronnie B Wilbur, Hari M Bharadwaj, Jeffrey Mark Siskind</div>
+                <div class="pub-venue">IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI), 2021</div>
+                <div class="pub-links"><a href="https://ieeexplore.ieee.org/document/9264220">Paper</a> <a href="https://ieee-dataport.org/open-access/dataset-perils-and-pitfalls-block-design-eeg-classification-experiments">Dataset</a></div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/omr.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">Everybody Is Unique: Towards Unbiased Human Mesh Recovery</span>
+                <div class="pub-authors"><span class="me">Ren Li</span>, Meng Zheng, Srikrishna Karanam, Terrence Chen, Ziyan Wu</div>
+                <div class="pub-venue">BMVC 2021 (Oral)</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2107.06239">Paper</a></div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/lmr.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">Learning Local Recurrent Models for Human Mesh Recovery</span>
+                <div class="pub-authors">Runze Li, Srikrishna Karanam, <span class="me">Ren Li</span>, Terrence Chen, Bir Bhanu, Ziyan Wu</div>
+                <div class="pub-venue">3DV 2021</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2107.12847">Paper</a></div>
+            </div>
+        </div>
+
+    <div class="year-header">2020</div>
+        <div class="pub-row">
+            <div class="pub-thumb">
+                <img src="figs/hkmr.png" alt="">
+            </div>
+            <div class="pub-info">
+                <span class="pub-title">Hierarchical Kinematic Human Mesh Recovery</span>
+                <div class="pub-authors">
+                    Georgios Georgakis*, <span class="me">Ren Li*</span>, Srikrishna Karanam, Terrence Chen, Jana Kosecka, Ziyan Wu (* Equal Contribution)
+                </div>
+                <div class="pub-venue">ECCV 2020</div>
+                <div class="pub-links">
+                    <a href="https://arxiv.org/abs/2003.04232">Paper</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/tmi.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">Towards Contactless Patient Positioning</span>
+                <div class="pub-authors">Srikrishna Karanam*, <span class="me">Ren Li*</span>, Fan Yang*, Wei Hu, Terrence Chen, Ziyan Wu</div>
+                <div class="pub-venue">IEEE Transactions on Medical Imaging (TMI), 2020</div>
+                <div class="pub-links"><a href="https://ieeexplore.ieee.org/document/9084097">Paper</a></div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/miccai.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">Robust Multi-modal 3D Patient Body Modeling</span>
+                <div class="pub-authors">Fan Yang*, <span class="me">Ren Li*</span>, Srikrishna Karanam, Terrence Chen, Haibin Ling, Ziyan Wu</div>
+                <div class="pub-venue">MICCAI 2020</div>
+                <div class="pub-links"><a href="https://link.springer.com/chapter/10.1007/978-3-030-59716-0_9">Paper</a></div>
+            </div>
+        </div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/deepfake.gif" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">DeeperForensics-1.0: A Large-Scale Dataset for Real-World Face Forgery Detection</span>
+                <div class="pub-authors">Liming Jiang, <span class="me">Ren Li</span>, Wayne Wu, Chen Qian, Chen Change Loy</div>
+                <div class="pub-venue">CVPR 2020</div>
+                <div class="pub-links"><a href="https://arxiv.org/abs/2001.03024">Paper</a> <a href="https://github.com/EndlessSora/DeeperForensics-1.0">Code</a> <a href="https://liming-jiang.com/projects/DrF1/DrF1.html">Project</a></div>
+            </div>
+        </div>
+
+    <div class="year-header">2015</div>
+
+        <div class="pub-row">
+            <div class="pub-thumb"><img src="figs/dcc.png" alt=""></div>
+            <div class="pub-info">
+                <span class="pub-title">Depth Error Induced Virtual View Synthesis Distortion Estimation for 3D Video Coding</span>
+                <div class="pub-authors">Yijian Xiang, Lu Fang, <span class="me">Ren Li</span>, N. M. Cheung</div>
+                <div class="pub-venue">IEEE Data Compression Conference (DCC) 2015</div>
+                <div class="pub-links"><a href="https://ieeexplore.ieee.org/document/7149288">Paper</a></div>
+            </div>
+        </div>
+
+    <footer style="margin-top: 100px; padding-bottom: 50px; font-size: 0.8rem; color: #999; text-align: center;">
+        &copy; Ren Li, 2026. Updated April 2026.
+    </footer>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 获取所有论文条目
+            const pubRows = document.querySelectorAll('.pub-row');
+
+            pubRows.forEach(row => {
+                const video = row.querySelector('video');
+                
+                if (video) {
+                    // 1. 鼠标移入：开始播放并应用“黑科技”混合模式（可选）
+                    row.addEventListener('mouseenter', () => {
+                        video.style.mixBlendMode = 'multiply'; // 消除黑线
+                        video.play();
+                    });
+
+                    // 2. 鼠标移出：停止播放并恢复 Poster
+                    row.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;   // 回到第一帧
+                        video.style.mixBlendMode = 'normal'; // 恢复正常混合模式
+                        
+                        // 核心技巧：调用 load() 会强制浏览器重新显示 poster 属性定义的图片
+                        video.load(); 
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
